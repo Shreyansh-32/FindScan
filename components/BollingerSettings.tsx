@@ -1,13 +1,12 @@
 "use client";
-
-import { BollingerBandsOptions } from "@/lib/indicator/bollinger";
+import { BollingerBandsOptions, BollingerBandStyleOptions } from "@/lib/indicator/bollinger";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import { Dispatch, SetStateAction } from "react";
-import { Slider } from "./ui/slider";
 
 function StyleControl({
   label,
@@ -15,8 +14,8 @@ function StyleControl({
   onOptionsChange,
 }: {
   label: string;
-  options: { visibility: boolean; color: string; lineWidth: number };
-  onOptionsChange: (newOptions: { visibility: boolean; color: string; lineWidth: number }) => void;
+  options: BollingerBandStyleOptions;
+  onOptionsChange: (newOptions: BollingerBandStyleOptions) => void;
 }) {
   return (
     <div className="grid grid-cols-4 items-center gap-4">
@@ -43,24 +42,17 @@ function StyleControl({
   );
 }
 
-
 export default function BollingerSettings({ options, setOptions }: { options: BollingerBandsOptions, setOptions: Dispatch<SetStateAction<BollingerBandsOptions>> }) {
   
   const handleInputChange = (field: 'length' | 'stdDev' | 'offset', value: string) => {
     const numValue = Number(value);
     if (!isNaN(numValue)) {
-      setOptions(prev => ({
-        ...prev,
-        inputs: { ...prev.inputs, [field]: numValue },
-      }));
+      setOptions(prev => ({ ...prev, inputs: { ...prev.inputs, [field]: numValue } }));
     }
   };
 
-  const handleStyleChange = (band: 'basis' | 'upper' | 'lower', newStyle: any) => {
-    setOptions(prev => ({
-      ...prev,
-      style: { ...prev.style, [band]: newStyle },
-    }));
+  const handleStyleChange = (band: 'basis' | 'upper' | 'lower', newStyle: BollingerBandStyleOptions) => {
+    setOptions(prev => ({ ...prev, style: { ...prev.style, [band]: newStyle } }));
   };
 
   const handleBackgroundChange = (key: 'visibility' | 'opacity', value: boolean | number) => {
@@ -73,7 +65,7 @@ export default function BollingerSettings({ options, setOptions }: { options: Bo
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-black hover:scale-105">Settings</Button>
+        <Button variant="outline">Settings</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader><DialogTitle>Bollinger Bands Settings</DialogTitle></DialogHeader>
@@ -84,19 +76,19 @@ export default function BollingerSettings({ options, setOptions }: { options: Bo
           </TabsList>
           <TabsContent value="inputs">
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="length" className="text-right">Length</label>
-                <Input id="length" type="number" value={options.inputs.length} onChange={(e) => handleInputChange('length', e.target.value)} className="col-span-3" />
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <label htmlFor="length" className="text-right">Length</label>
+                  <Input id="length" type="number" value={options.inputs.length} onChange={(e) => handleInputChange('length', e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <label htmlFor="stdDev" className="text-right">StdDev</label>
+                  <Input id="stdDev" type="number" value={options.inputs.stdDev} onChange={(e) => handleInputChange('stdDev', e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <label htmlFor="offset" className="text-right">Offset</label>
+                  <Input id="offset" type="number" value={options.inputs.offset} onChange={(e) => handleInputChange('offset', e.target.value)} className="col-span-3" />
+                </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="stdDev" className="text-right">StdDev</label>
-                <Input id="stdDev" type="number" value={options.inputs.stdDev} onChange={(e) => handleInputChange('stdDev', e.target.value)} className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="offset" className="text-right">Offset</label>
-                <Input id="offset" type="number" value={options.inputs.offset} onChange={(e) => handleInputChange('offset', e.target.value)} className="col-span-3" />
-              </div>
-            </div>
           </TabsContent>
           <TabsContent value="style">
             <div className="grid gap-4 py-4">
