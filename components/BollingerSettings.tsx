@@ -65,7 +65,7 @@ export default function BollingerSettings({ options, setOptions }: { options: Bo
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Settings</Button>
+        <Button variant="outline" className="text-black hover:scale-105">Settings</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader><DialogTitle>Bollinger Bands Settings</DialogTitle></DialogHeader>
